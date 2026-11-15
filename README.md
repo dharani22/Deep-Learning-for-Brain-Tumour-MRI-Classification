@@ -65,7 +65,7 @@ Accuracy dropped sharply once small patches were hidden and fell to 0.250 (rando
 - Combine MRI with clinical information and handle missing scans or missing clinical data.
 
 ## Link to Project 1
-[missing-data-imputation-ml](https://github.com/YOUR-USERNAME/missing-data-imputation-ml) studies missing values in tabular clinical data. This project looks at the image equivalent: what happens when parts of a scan are missing.
+[missing-data-imputation-ml](https://github.com/dharani22/handling-missing-data-imputation-ml) studies missing values in tabular clinical data. This project looks at the image equivalent: what happens when parts of a scan are missing.
 
 ## Run it
 Open `brain_tumour_mri_classification.ipynb` in Google Colab, set Runtime to a T4 GPU, and run the cells from top to bottom. The dataset is downloaded automatically. Trained model weights are not included in this repository.
