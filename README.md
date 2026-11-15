@@ -12,9 +12,6 @@ Brain Tumor MRI Dataset (Kaggle, Masoud Nickparvar): 4 classes (glioma, meningio
 - Training images: [ ] (split 80% training / 20% validation)
 - Test images: 1,600 (400 per class)
 
-![Sample images](figures/p2_sample_images.png)
-![Class counts](figures/p2_class_counts.png)
-
 ## Method
 1. Resize images to 224 x 224 and normalise them.
 2. Fine-tune a ResNet18 pretrained on ImageNet (Adam, learning rate 1e-4, batch size 32, 5 epochs, no augmentation).
