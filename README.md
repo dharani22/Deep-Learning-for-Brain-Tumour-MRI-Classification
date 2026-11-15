@@ -1,74 +1,77 @@
-# Deep Learning for Brain Tumour MRI Classification
+# Handling Missing Data in Machine Learning
 
-Performance, explainability and robustness to missing image information, using a fine-tuned ResNet18 on a public brain MRI dataset.
-
-> Educational research project. Not a medical device and not validated for clinical use.
+A comparison of imputation strategies (Median, KNN, MICE) and missingness patterns (MCAR vs MNAR) on a clinical tabular dataset.
 
 ## Research question
-How accurately can a deep learning model classify brain tumour MRI scans, where does it look when it decides, can its confidence be trusted, and how does accuracy change when parts of the image are hidden?
+How much does missing data reduce model accuracy, and does the choice of imputation method or the missingness pattern change the answer?
 
 ## Data
-Brain Tumor MRI Dataset (Kaggle, Masoud Nickparvar): 4 classes (glioma, meningioma, pituitary, no tumour).
-- Training images: [ ] (split 80% training / 20% validation)
-- Test images: 1,600 (400 per class)
+Breast Cancer Wisconsin (Diagnostic) dataset from scikit-learn: 569 patients, 6 measurements used (mean radius, mean texture, mean perimeter, mean area, mean smoothness, mean compactness). Target: malignant vs benign.
 
 ## Method
-1. Resize images to 224 x 224 and normalise them.
-2. Fine-tune a ResNet18 pretrained on ImageNet (Adam, learning rate 1e-4, batch size 32, 5 epochs, no augmentation).
-3. Evaluate once on the held-out test set: accuracy, per-class precision/recall/F1, confusion matrix, ROC curves.
-4. Explain predictions with Grad-CAM heatmaps.
-5. Test robustness by hiding random 16 x 16 pixel patches (0% to 70% of the image) and measuring accuracy.
-6. Check calibration with a reliability diagram and Expected Calibration Error (ECE).
+1. Start from the complete dataset (the "truth").
+2. Delete 10% to 50% of the values on purpose, either completely at random (MCAR) or depending on the value itself (MNAR).
+3. Fill the gaps with Median, KNN or MICE imputation.
+4. Train a Random Forest and measure AUC with 5-fold cross-validation. Imputation is inside a scikit-learn Pipeline, so there is no data leakage.
+5. Compare training vs testing performance using an 80/20 split, with confusion matrices and ROC curves.
 
 ## Key results
-- **Test accuracy: 0.933** (macro F1 0.932)
-- **Calibration (ECE): 0.046** (average confidence 0.979 vs accuracy 0.933, so slightly overconfident)
-- **Most common mistake:** true glioma predicted as no tumour (45 images)
 
-| Class | Precision | Recall | F1 |
+**Complete-data AUC: 0.981**
+
+AUC by imputation method and % of values missing (5-fold cross-validation):
+
+| Missing % | Median | KNN | MICE |
 |---|---|---|---|
-| Glioma | 0.988 | 0.790 | 0.878 |
-| Meningioma | 0.891 | 0.965 | 0.927 |
-| No tumour | 0.881 | 0.998 | 0.936 |
-| Pituitary | 0.995 | 0.980 | 0.987 |
+| 10 | 0.979 | 0.971 | 0.977 |
+| 20 | 0.972 | 0.969 | 0.975 |
+| 30 | 0.961 | 0.946 | 0.966 |
+| 40 | 0.956 | 0.949 | 0.957 |
+| 50 | 0.944 | 0.922 | 0.940 |
+| **Average** | 0.962 | 0.951 | 0.963 |
 
+MCAR vs MNAR at 30% missing:
 
-## Robustness to missing image information
-
-| Image area hidden | Accuracy | Average confidence |
+| Method | Random (MCAR) | Value-dependent (MNAR) |
 |---|---|---|
-| 0% | 0.933 | 0.979 |
-| 10% | 0.426 | 0.862 |
-| 20% | 0.274 | 0.928 |
-| 30% | 0.251 | 0.969 |
-| 40% | 0.250 | 0.974 |
-| 50% | 0.250 | 0.974 |
-| 60% | 0.250 | 0.975 |
-| 70% | 0.250 | 0.981 |
+| Median | 0.961 | 0.958 |
+| KNN | 0.946 | 0.944 |
+| MICE | 0.966 | 0.960 |
 
-Accuracy dropped sharply once small patches were hidden and fell to 0.250 (random guessing for 4 equal classes) from 40% hidden, while the model's confidence stayed high. The model was trained without hidden regions and the grey patches differ from the black scan background, so this is a stress test and not a measure of performance on real missing MRI sequences.
+Training vs testing (30% missing, 80/20 split):
+
+| Model | Train AUC | Test AUC |
+|---|---|---|
+| Complete data | 1.000 | 0.980 |
+| Median | 1.000 | 0.938 |
+| KNN | 1.000 | 0.905 |
+| MICE | 1.000 | 0.951 |
+
+## Findings
+- Accuracy falls as more data goes missing. AUC dropped from 0.981 (complete data) to between 0.922 and 0.944 at 50% missing.
+- KNN imputation had the lowest AUC at every missing level and the lowest test AUC (0.905).
+- Median and MICE performed very similarly (average AUC 0.962 vs 0.963). The gap is too small to call a winner from this experiment.
+- The missingness pattern had a small effect here: MNAR was at most 0.006 AUC lower than MCAR at 30% missing.
+- Training AUC was 1.000 for every model, because a Random Forest can memorise training data. The test AUC is the honest measure of performance.
+
+![AUC vs missing](figures/cell09_auc_vs_missing.png)
+![ROC curves](figures/cell15_roc.png)
 
 ## Limitations
-- One model, one training run, one split; variability was not measured.
-- Only 5 epochs, no hyperparameter tuning, no data augmentation.
-- 2D slices with no patient IDs, so possible overlap of patients between training and test sets, and duplicate images, were not checked. Scores may be optimistic.
-- Public data from several sources; no external validation.
-- Hidden patches are a simulation and are not the same as a missing MRI sequence.
-- Grad-CAM shows where the model looked, not why it decided. It is not clinical evidence.
-- Not clinically validated.
+- One small dataset and 6 features only.
+- Missing values were simulated, not real.
+- One model (Random Forest); results may differ for other models.
+- One random missing-data mask per level (no repeated runs), so differences of about 0.005 AUC, such as Median vs MICE, should not be treated as meaningful.
+- The train/test split uses only about 114 test patients and one split, so those scores are noisy.
 
 ## Future work
-- Train with occlusion augmentation (e.g. random erasing) and repeat the robustness test.
 - Repeat with several random seeds and report variability.
-- Compare more architectures and add calibration methods such as temperature scaling.
-- Use patient-level splits and external validation.
-- Combine MRI with clinical information and handle missing scans or missing clinical data.
-
-## Link to Project 1
-[missing-data-imputation-ml](https://github.com/dharani22/handling-missing-data-imputation-ml) studies missing values in tabular clinical data. This project looks at the image equivalent: what happens when parts of a scan are missing.
+- Test more datasets and models.
+- Add calibration and explainability analysis.
+- Extend to missing information in medical images.
 
 ## Run it
-Open `brain_tumour_mri_classification.ipynb` in Google Colab, set Runtime to a T4 GPU, and run the cells from top to bottom. The dataset is downloaded automatically. Trained model weights are not included in this repository.
+Open `missing_data_imputation.ipynb` in Google Colab and run the cells from top to bottom.
 
 ## Tools
-Python, PyTorch, torchvision, scikit-learn, pandas, NumPy, matplotlib, seaborn, kagglehub
+Python, pandas, NumPy, scikit-learn, matplotlib, seaborn
