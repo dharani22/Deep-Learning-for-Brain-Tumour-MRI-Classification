@@ -32,18 +32,6 @@ Brain Tumor MRI Dataset (Kaggle, Masoud Nickparvar): 4 classes (glioma, meningio
 | No tumour | 0.881 | 0.998 | 0.936 |
 | Pituitary | 0.995 | 0.980 | 0.987 |
 
-![Training curves](figures/p2_training_curves.png)
-![Confusion matrix](figures/p2_confusion.png)
-![ROC curves](figures/p2_roc.png)
-
-## Explainability (Grad-CAM)
-Red and yellow regions are the areas that most influenced the prediction.
-
-![Grad-CAM](figures/p2_gradcam.png)
-
-[Write 2 to 3 sentences describing only what you actually see: do the heatmaps fall on the tumour, or on the skull edge or background?]
-
-![Misclassified images](figures/p2_mistakes.png)
 
 ## Robustness to missing image information
 
@@ -59,17 +47,6 @@ Red and yellow regions are the areas that most influenced the prediction.
 | 70% | 0.250 | 0.981 |
 
 Accuracy dropped sharply once small patches were hidden and fell to 0.250 (random guessing for 4 equal classes) from 40% hidden, while the model's confidence stayed high. The model was trained without hidden regions and the grey patches differ from the black scan background, so this is a stress test and not a measure of performance on real missing MRI sequences.
-
-![Robustness](figures/p2_robustness.png)
-![Robustness examples](figures/p2_robustness_examples.png)
-
-## Calibration
-![Calibration](figures/p2_calibration.png)
-
-[Describe whether wrong predictions tend to have lower confidence than correct ones.]
-
-## Feature space
-![t-SNE](figures/p2_tsne.png)
 
 ## Limitations
 - One model, one training run, one split; variability was not measured.
