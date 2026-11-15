@@ -12,8 +12,8 @@ Brain Tumor MRI Dataset (Kaggle, Masoud Nickparvar): 4 classes (glioma, meningio
 - Training images: [ ] (split 80% training / 20% validation)
 - Test images: 1,600 (400 per class)
 
-![Sample images](figures/p2_sample_images.png)
-![Class counts](figures/p2_class_counts.png)
+![Sample images](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_sample_images.png)
+![Class counts](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_class_counts.png)
 
 ## Method
 1. Resize images to 224 x 224 and normalise them.
@@ -35,18 +35,18 @@ Brain Tumor MRI Dataset (Kaggle, Masoud Nickparvar): 4 classes (glioma, meningio
 | No tumour | 0.881 | 0.998 | 0.936 |
 | Pituitary | 0.995 | 0.980 | 0.987 |
 
-![Training curves](figures/p2_training_curves.png)
-![Confusion matrix](figures/p2_confusion.png)
-![ROC curves](figures/p2_roc.png)
+![Training curves](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_training_curves.png)
+![Confusion matrix](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_confusion.png)
+![ROC curves](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_roc.png)
 
 ## Explainability (Grad-CAM)
 Red and yellow regions are the areas that most influenced the prediction.
 
-![Grad-CAM](figures/p2_gradcam.png)
+![Grad-CAM](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_gradcam.png)
 
 [Write 2 to 3 sentences describing only what you actually see: do the heatmaps fall on the tumour, or on the skull edge or background?]
 
-![Misclassified images](figures/p2_mistakes.png)
+![Misclassified images](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_mistakes.png)
 
 ## Robustness to missing image information
 
@@ -63,16 +63,16 @@ Red and yellow regions are the areas that most influenced the prediction.
 
 Accuracy dropped sharply once small patches were hidden and fell to 0.250 (random guessing for 4 equal classes) from 40% hidden, while the model's confidence stayed high. The model was trained without hidden regions and the grey patches differ from the black scan background, so this is a stress test and not a measure of performance on real missing MRI sequences.
 
-![Robustness](figures/p2_robustness.png)
-![Robustness examples](figures/p2_robustness_examples.png)
+![Robustness](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_robustness.png)
+![Robustness examples](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_robustness_examples.png)
 
 ## Calibration
-![Calibration](figures/p2_calibration.png)
+![Calibration](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_calibration.png)
 
 [Describe whether wrong predictions tend to have lower confidence than correct ones.]
 
 ## Feature space
-![t-SNE](figures/p2_tsne.png)
+![t-SNE](https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep%20Learing/p2_tsne.png)
 
 ## Limitations
 - One model, one training run, one split; variability was not measured.
@@ -94,7 +94,7 @@ Accuracy dropped sharply once small patches were hidden and fell to 0.250 (rando
 [missing-data-imputation-ml](https://github.com/YOUR-USERNAME/missing-data-imputation-ml) studies missing values in tabular clinical data. This project looks at the image equivalent: what happens when parts of a scan are missing.
 
 ## Run it
-Open `brain_tumour_mri_classification.ipynb` in Google Colab, set Runtime to a T4 GPU, and run the cells from top to bottom. The dataset is downloaded automatically. Trained model weights are not included in this repository.
+Open https://github.com/dharani22/Deep-Learning-for-Brain-Tumour-MRI-Classification/blob/main/Deep_Learning_for_Brain_Tumour_MRI_Classification.ipynb in Google Colab, set Runtime to a T4 GPU, and run the cells from top to bottom. The dataset is downloaded automatically. Trained model weights are not included in this repository.
 
 ## Tools
 Python, PyTorch, torchvision, scikit-learn, pandas, NumPy, matplotlib, seaborn, kagglehub
